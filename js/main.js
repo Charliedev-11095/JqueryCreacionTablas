@@ -62,11 +62,11 @@ $(document).ready(function() {
 
     function createTable(rows, cols) {
         let tableHtml = "";
-
+    
         for (let i = 0; i < rows; i++) {
             tableHtml += "<tr>";
             for (let j = 0; j < cols; j++) {
-                tableHtml += "<td></td>";
+                tableHtml += "<td style='border: 4px solid black; min-width: 25px;height: 25px;'></td>";
             }
             tableHtml += "</tr>";
         }
