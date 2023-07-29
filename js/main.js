@@ -16,6 +16,12 @@ $(document).ready(function() {
         }
     });
 
+      // Agregar el evento click a las celdas de la tabla
+      $(document).on("click", "#tabla td", function() {
+        // Cambiar el color de fondo de la celda al hacer clic
+        $(this).toggleClass("celda-seleccionada");
+    });
+
     $("#eliminarTablaBtn").on("click", function() {
         $("#tabla").empty();
         numRows = 0;
@@ -73,4 +79,69 @@ $(document).ready(function() {
 
         $("#tabla").html(tableHtml);
     }
+
+    $(document).on("click", "#tabla td", function() {
+        // Al hacer clic en una celda, guardar la referencia a la celda seleccionada
+        selectedCell = $(this);
+        // Habilitar los botones para insertar y eliminar filas y columnas
+        $("#insertarFilaArribaBtn, #insertarFilaAbajoBtn, #insertarColumnaIzquierdaBtn, #insertarColumnaDerechaBtn, #eliminarFilaBtn, #eliminarColumnaBtn").prop("disabled", false);
+    });
+
+    $("#insertarFilaArribaBtn").on("click", function() {
+        selectedCell.parent().before(createTableRow(numCols));
+        numRows++;
+    });
+
+    $("#insertarFilaAbajoBtn").on("click", function() {
+        selectedCell.parent().after(createTableRow(numCols));
+        numRows++;
+    });
+
+    $("#insertarColumnaIzquierdaBtn").on("click", function() {
+        selectedCell.each(function() {
+            // Obtener el índice de la columna seleccionada
+            const columnIndex = $(this).index();
+            $(this).parent().find("td").eq(columnIndex).before("<td style='border: 4px solid black; min-width: 25px;height: 25px;'></td>");
+        });
+        numCols++;
+    });
+
+    $("#insertarColumnaDerechaBtn").on("click", function() {
+        selectedCell.each(function() {
+            $(this).after("<td style='border: 4px solid black; min-width: 25px;height: 25px;'></td>");
+        });
+        numCols++;
+    });
+
+    $("#eliminarFilaBtn").on("click", function() {
+        selectedCell.parent().remove();
+        numRows--;
+        // Deshabilitar los botones después de eliminar la fila
+        disableButtons();
+    });
+
+    $("#eliminarColumnaBtn").on("click", function() {
+        selectedCell.each(function() {
+            $(this).remove();
+        });
+        numCols--;
+        // Deshabilitar los botones después de eliminar la columna
+        disableButtons();
+    });
+
+    function createTableRow(cols) {
+        let rowHtml = "<tr>";
+        for (let j = 0; j < cols; j++) {
+            rowHtml += "<td style='border: 4px solid black; min-width: 25px;height: 25px;'></td>";
+        }
+        rowHtml += "</tr>";
+        return rowHtml;
+    }
+
+    function disableButtons() {
+        // Deshabilitar los botones si no hay una celda seleccionada
+        selectedCell = null;
+        $("#insertarFilaArribaBtn, #insertarFilaAbajoBtn, #insertarColumnaIzquierdaBtn, #insertarColumnaDerechaBtn, #eliminarFilaBtn, #eliminarColumnaBtn").prop("disabled", true);
+    }
+
 });
